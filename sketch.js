@@ -1,29 +1,37 @@
 let points = [];
 let numOfPoints = 1000;
-let deviation = 200;
+let deviation = 300;
 let cnv;
 let diagram;
 let testPair;
 let _x;
 let _y;
 let step;
+let counter;
+let movingStep;
+let angle;
+let mic;
 
 function createCell() {}
 
 function setup() {
-  frameRate(10)
+  mic = new p5.AudioIn();
+  mic.start();
+  //angle = random(-5,5);
+  counter = 0;
+  frameRate(20)
   angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
   //Settings for drawing(these are the default values)
 
   //Set Cell Stroke Weight
-  voronoiCellStrokeWeight(1);
+  voronoiCellStrokeWeight(0.6);
   //Set Site Stroke Weight
-  voronoiSiteStrokeWeight(2);
+  voronoiSiteStrokeWeight(1);
   //Set Cell Stroke
-  voronoiCellStroke(0);
+  voronoiCellStroke(200);
   //Set Site Stroke
-  voronoiSiteStroke(250);
+  voronoiSiteStroke(10);
   //Set flag to draw Site
   voronoiSiteFlag(true);
   for (let i = deviation; i >= 0; i--) {
@@ -45,15 +53,18 @@ function setup() {
 
 
 function draw() {
+  colorMode(RGB, 255, 255, 255, 1);
+  micLevel = mic.getLevel();
+  counter++;
   updatePoints();
-  background(255);
+  background(10,0,20,0.4);
   voronoiDraw(0, 0, false, false);
-  
+
 
 }
 
-function updatePoints(){
-    //Draw point that is closest to the mouse closer to the mouse
+function updatePoints() {
+  //Draw point that is closest to the mouse closer to the mouse
   let pointID = voronoiGetSite(mouseX, mouseY, false);
   //voronoiDrawCell( points[pointID][0], points[pointID][1], pointID,VOR_CELLDRAW_BOUNDED, true, false);
   /*
@@ -68,22 +79,20 @@ function updatePoints(){
   }
   points[pointID] = [x,y];
   */
-
- points.forEach(function(element) {
-  let movingStep = random(-3,3);
-  push();
-  translate(windowWidth / 2, windowHeight / 2);
-  element[0] += movingStep;
-  element[1] += movingStep;
-  pop();
-});
-
-
+  console.log(micLevel)
+  points.forEach(function (element) {
+    angle = random(-5, 5);
+    //Rotate points around center
+    let translatedX = element[0] - windowWidth / 2;
+    let translatedY = element[1] - windowHeight / 2;
+    let _x = translatedX * cos(angle) - translatedY * sin(angle);
+    let _y = translatedX * sin(angle) + translatedY * cos(angle);
+    element[0] = _x + windowWidth / 2;
+    element[1] = _y + windowHeight / 2;
+  });
   voronoiSiteFlag(true);
-  let diagram = voronoiGetDiagram();
   voronoiClearSites();
   voronoiSites(points);
   voronoi(windowWidth, windowHeight, false);
-  console.log(diagram.cells.length)
 
 }
