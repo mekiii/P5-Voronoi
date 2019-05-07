@@ -1,13 +1,11 @@
 let points = [];
-let numOfPoints = 1000;
-let deviation = 2000;
+let deviation = 500;
 let cnv;
 let diagram;
 let testPair;
 let _x;
 let _y;
 let step;
-let counter;
 let movingStep;
 let angle;
 let mic;
@@ -18,7 +16,6 @@ function setup() {
   //mic = new p5.AudioIn();
   //mic.start();
   //angle = random(-5,5);
-  counter = 0;
   frameRate(20)
   angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
@@ -27,11 +24,11 @@ function setup() {
   //Set Cell Stroke Weight
   voronoiCellStrokeWeight(0.6);
   //Set Site Stroke Weight
-  voronoiSiteStrokeWeight(3);
+  voronoiSiteStrokeWeight(1);
   //Set Cell Stroke
   voronoiCellStroke(200);
   //Set Site Stroke
-  voronoiSiteStroke(100);
+  voronoiSiteStroke(10);
   //Set flag to draw Site
   voronoiSiteFlag(true);
   for (let i = deviation; i >= 0; i--) {
@@ -57,7 +54,7 @@ function setup() {
 function draw() {
   colorMode(RGB, 255, 255, 255, 1);
   //micLevel = mic.getLevel();
-  //counter++;
+
   updatePoints();
   background(10, 0, 20, 0.7);
   voronoiDraw(0, 0, false, false);
@@ -91,7 +88,7 @@ function updatePoints() {
   //console.log(micLevel)
   
   points.forEach(function (element) {
-    angle = random(-0.1, 0.1);
+    angle = random(-0.5, 1);
     //Rotate points around center
     let translatedX = element[0] - windowWidth / 2;
     let translatedY = element[1] - windowHeight / 2;
