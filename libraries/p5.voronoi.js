@@ -162,6 +162,7 @@ const VOR_CELLDRAW_SITE = 3;
 		sites = [];
 	}
 
+
 	/*
 	Get Cell id in position
 	*/

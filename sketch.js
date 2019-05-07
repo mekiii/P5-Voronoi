@@ -1,6 +1,6 @@
 let points = [];
 let numOfPoints = 1000;
-let deviation = 300;
+let deviation = 2000;
 let cnv;
 let diagram;
 let testPair;
@@ -15,8 +15,8 @@ let mic;
 function createCell() {}
 
 function setup() {
-  mic = new p5.AudioIn();
-  mic.start();
+  //mic = new p5.AudioIn();
+  //mic.start();
   //angle = random(-5,5);
   counter = 0;
   frameRate(20)
@@ -27,16 +27,18 @@ function setup() {
   //Set Cell Stroke Weight
   voronoiCellStrokeWeight(0.6);
   //Set Site Stroke Weight
-  voronoiSiteStrokeWeight(1);
+  voronoiSiteStrokeWeight(3);
   //Set Cell Stroke
   voronoiCellStroke(200);
   //Set Site Stroke
-  voronoiSiteStroke(10);
+  voronoiSiteStroke(100);
   //Set flag to draw Site
   voronoiSiteFlag(true);
   for (let i = deviation; i >= 0; i--) {
     let pointX = randomGaussian(windowWidth / 2, i);
     let pointY = randomGaussian(windowHeight / 2, i)
+    //let pointX = random(0, windowWidth);
+    //let pointY = random(0 , windowHeight);
     points.push([pointX, pointY]);
     voronoiSites(points);
     //Compute voronoi diagram with size 700 by 500
@@ -54,34 +56,42 @@ function setup() {
 
 function draw() {
   colorMode(RGB, 255, 255, 255, 1);
-  micLevel = mic.getLevel();
-  counter++;
+  //micLevel = mic.getLevel();
+  //counter++;
   updatePoints();
-  background(10,0,20,0.4);
+  background(10, 0, 20, 0.7);
   voronoiDraw(0, 0, false, false);
-
-
 }
 
 function updatePoints() {
   //Draw point that is closest to the mouse closer to the mouse
-  let pointID = voronoiGetSite(mouseX, mouseY, false);
-  //voronoiDrawCell( points[pointID][0], points[pointID][1], pointID,VOR_CELLDRAW_BOUNDED, true, false);
-  /*
-  let x, y;
-  if (step <= 1){
-    x = step*mouseX +  (1-step)*points[pointID][0];
-    y = step*mouseY +  (1-step)*points[pointID][1];
-    step += 0.1;
-  }
-  else {
-    step = 0.1
-  }
-  points[pointID] = [x,y];
-  */
-  console.log(micLevel)
+   let pointIDs = getClosestSite(mouseX, mouseY);
+   pointIDs.forEach((element) => {
+    let x = lerp(points[element][0], mouseX, step);
+    let y = lerp(points[element][1], mouseY, step);
+    points[element] = [x, y];
+   })
+   
+
+  /*points.forEach((element,index) => {
+   // if(sqrt(sq(x - element[0])+sq(y - element[1])) < tempdist){
+     let x = mouseX;
+     let y = mouseY;
+      tempdist = sqrt(sq(x - element[0])+sq(y - element[1]));
+      let maxDist = sqrt(sq(windowWidth) + sq(windowHeight));
+      let stepSize = map(tempdist, 0, maxDist, 0.4, 0.0000001)
+      stepSize = stepSize * stepSize * stepSize;
+      x = lerp(points[index][0], mouseX, stepSize);
+      y = lerp(points[index][1], mouseY, stepSize);
+      points[index] = [x, y];
+     
+    //}
+  });
+*/
+  //console.log(micLevel)
+  
   points.forEach(function (element) {
-    angle = random(-5, 5);
+    angle = random(-0.1, 0.1);
     //Rotate points around center
     let translatedX = element[0] - windowWidth / 2;
     let translatedY = element[1] - windowHeight / 2;
@@ -90,9 +100,21 @@ function updatePoints() {
     element[0] = _x + windowWidth / 2;
     element[1] = _y + windowHeight / 2;
   });
-  voronoiSiteFlag(true);
+  
   voronoiClearSites();
+  voronoiSiteFlag(true);
   voronoiSites(points);
   voronoi(windowWidth, windowHeight, false);
+}
 
+function getClosestSite(x,y) {
+  let pointIDs =[];
+  let tempdist = 200;
+  points.forEach((element,index) => {
+    if(sqrt(sq(x - element[0])+sq(y - element[1])) < tempdist){
+      //tempdist = sqrt(sq(x - element[0])+sq(y - element[1]));
+      pointIDs.push(index);
+    }
+  });
+  return pointIDs
 }
