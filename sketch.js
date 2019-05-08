@@ -1,21 +1,16 @@
 let points = [];
-let deviation = 500;
-let cnv;
-let diagram;
-let testPair;
+let deviation = 200;
 let _x;
 let _y;
 let step;
-let movingStep;
 let angle;
-let mic;
+//let mic;
 
 function createCell() {}
 
 function setup() {
   //mic = new p5.AudioIn();
   //mic.start();
-  //angle = random(-5,5);
   frameRate(20)
   angleMode(DEGREES);
   createCanvas(windowWidth, windowHeight);
@@ -42,12 +37,7 @@ function setup() {
   }
   voronoi(windowWidth, windowHeight, false);
 
-
-  //Get the raw diagram, for more advanced use
-  //This is purely to get information, doesn't change the diagram
-  //https://github.com/gorhill/Javascript-Voronoi
-
-  step = 0.1;
+  step = 0.04;
 }
 
 
@@ -62,42 +52,9 @@ function draw() {
 
 function updatePoints() {
   //Draw point that is closest to the mouse closer to the mouse
-   let pointIDs = getClosestSite(mouseX, mouseY);
-   pointIDs.forEach((element) => {
-    let x = lerp(points[element][0], mouseX, step);
-    let y = lerp(points[element][1], mouseY, step);
-    points[element] = [x, y];
-   })
-   
-
-  /*points.forEach((element,index) => {
-   // if(sqrt(sq(x - element[0])+sq(y - element[1])) < tempdist){
-     let x = mouseX;
-     let y = mouseY;
-      tempdist = sqrt(sq(x - element[0])+sq(y - element[1]));
-      let maxDist = sqrt(sq(windowWidth) + sq(windowHeight));
-      let stepSize = map(tempdist, 0, maxDist, 0.4, 0.0000001)
-      stepSize = stepSize * stepSize * stepSize;
-      x = lerp(points[index][0], mouseX, stepSize);
-      y = lerp(points[index][1], mouseY, stepSize);
-      points[index] = [x, y];
-     
-    //}
-  });
-*/
-  //console.log(micLevel)
-  
-  points.forEach(function (element) {
-    angle = random(-0.5, 1);
-    //Rotate points around center
-    let translatedX = element[0] - windowWidth / 2;
-    let translatedY = element[1] - windowHeight / 2;
-    let _x = translatedX * cos(angle) - translatedY * sin(angle);
-    let _y = translatedX * sin(angle) + translatedY * cos(angle);
-    element[0] = _x + windowWidth / 2;
-    element[1] = _y + windowHeight / 2;
-  });
-  
+  mouseAttractor();
+  moveRandomly();
+  //setup new voronoi diagram
   voronoiClearSites();
   voronoiSiteFlag(true);
   voronoiSites(points);
@@ -109,9 +66,43 @@ function getClosestSite(x,y) {
   let tempdist = 200;
   points.forEach((element,index) => {
     if(sqrt(sq(x - element[0])+sq(y - element[1])) < tempdist){
-      //tempdist = sqrt(sq(x - element[0])+sq(y - element[1]));
       pointIDs.push(index);
     }
   });
   return pointIDs
+}
+
+function rotatePoints(){
+  //micLevel = mic.getLevel();
+  points.forEach(function (element) {
+    angle = random(-4, 4);
+    //Rotate points around center
+    let translatedX = element[0] - windowWidth / 2;
+    let translatedY = element[1] - windowHeight / 2;
+    let _x = translatedX * cos(angle) - translatedY * sin(angle);
+    let _y = translatedX * sin(angle) + translatedY * cos(angle);
+    element[0] = _x + windowWidth / 2;
+    element[1] = _y + windowHeight / 2;
+  });
+}
+
+
+function moveRandomly(){
+  //micLevel = mic.getLevel();
+  points.forEach(function (element) {
+    let stepper1 = random(-3, 3);
+    let stepper2 = random(-3, 3);
+    //Rotate points around center
+    element[0] += stepper1;
+    element[1] += stepper2;
+  });
+}
+
+function mouseAttractor(){
+  let pointIDs = getClosestSite(mouseX, mouseY);
+  pointIDs.forEach((element) => {
+   let x = lerp(points[element][0], mouseX, step);
+   let y = lerp(points[element][1], mouseY, step);
+   points[element] = [x, y];
+  })
 }
