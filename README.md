@@ -5,4 +5,4 @@ During my research of beautiful generative arts patterns was fascinated by these
 *"In mathematics, a Voronoi diagram is a partitioning of a plane into regions based on distance to points in a specific subset of the plane. That set of points (called seeds, sites, or generators) is specified beforehand, and for each seed there is a corresponding region consisting of all points closer to that seed than to any other. These regions are called Voronoi cells."*[1](https://en.wikipedia.org/wiki/Voronoi_diagram) 
 
 
-![Voronoi playground](https://i.imgur.com/GIOcba9.gif)
+![Voronoi playground](https://i.imgur.com/4ca270l.jpg)
