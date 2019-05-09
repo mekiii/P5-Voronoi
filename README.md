@@ -1,5 +1,5 @@
 # Voronoi Playground
-During my research of beautiful generative arts patterns was fascinated by these beautiful voronoi diagrams, that deliver a cell-like structure. Therefore I sketched a jiggling animation with it via P5 and a voronoi library. 
+During my research of beautiful generative arts patterns I was fascinated by these beautiful voronoi diagrams, that deliver a cell-like structure. Therefore I sketched a jiggling animation with it via P5 and a voronoi library. 
 
 Feel free to check it out here: https://mekiii.github.io/Voronoi-P5/
 
