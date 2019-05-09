@@ -1,5 +1,5 @@
 let points = [];
-let deviation = 200;
+let deviation = 500;
 let _x;
 let _y;
 let step;
